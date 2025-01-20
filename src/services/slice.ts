@@ -89,6 +89,10 @@ const burgerConstructorSlice = createSlice({
         arr[action.payload - 1]
       ];
       state.ingredients = arr;
+    },
+    clearBurgerConstructor: (state) => {
+      state.bun = null;
+      state.ingredients = [];
     }
   },
   selectors: {
@@ -131,7 +135,8 @@ export const {
   addIngredient,
   removeIngredient,
   moveDownIngredient,
-  moveUpIngredient
+  moveUpIngredient,
+  clearBurgerConstructor
 } = burgerConstructorSlice.actions;
 export const { getBurgerConstructorSelector } =
   burgerConstructorSlice.selectors;
