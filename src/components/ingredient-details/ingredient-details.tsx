@@ -1,6 +1,4 @@
 import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Modal } from '@components';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 import { getIngredientsSelector } from '../../services/slice';
@@ -9,7 +7,6 @@ import { getIngredients } from '../../services/actions';
 
 export const IngredientDetails: FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -27,14 +24,5 @@ export const IngredientDetails: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <Modal
-      title='Ingredient Details'
-      onClose={() => {
-        navigate('/');
-      }}
-    >
-      <IngredientDetailsUI ingredientData={ingredientData} />
-    </Modal>
-  );
+  return <IngredientDetailsUI ingredientData={ingredientData} />;
 };

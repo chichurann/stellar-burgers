@@ -1,6 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Modal } from '@components';
+import { useParams } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
@@ -10,7 +9,6 @@ import { getIngredients } from '../../services/actions';
 import { getIngredientsSelector } from '../../services/slice';
 
 export const OrderInfo: FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { number } = useParams();
 
@@ -73,14 +71,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <Modal
-      title='Order Info'
-      onClose={() => {
-        navigate(-1);
-      }}
-    >
-      <OrderInfoUI orderInfo={orderInfo} />{' '}
-    </Modal>
-  );
+  return <OrderInfoUI orderInfo={orderInfo} />;
 };
