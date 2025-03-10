@@ -25,6 +25,7 @@ export const BurgerConstructor: FC = () => {
 
       orderBurgerApi(constructorItems.ingredients.map((item) => item._id))
         .then((response) => {
+          console.log(response);
           setOrderRequest(false);
           setOrderModalData(response.order);
           dispatch(clearBurgerConstructor());
