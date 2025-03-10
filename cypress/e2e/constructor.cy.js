@@ -1,5 +1,17 @@
 /// <reference types="cypress" />
 
+const selectors = {
+  ingredient: '[data-cy=ingredient-643d69a5c3f7b9001cfa093c]',
+  ingredientAlt: '[data-cy=ingredient-643d69a5c3f7b9001cfa0941]',
+  ingredientDetails: '[data-cy=ingredient-details]',
+  ingredientDetailsClose: '[data-cy=ingredient-details-close]',
+  overlay: '[data-cy=overlay]',
+  addIngredient: (id) => `[data-cy=add-ingredient-${id}]>button`,
+  ingredientBunTop: '[data-cy=ingredient-bun-top]',
+  ingredientMain: (id) => `[data-cy=ingredient-main-${id}]`,
+  orderButton: '[data-cy=order-button]>button'
+};
+
 describe('тесты конструктора', () => {
   beforeEach(() => {
     cy.intercept('GET', '/api/ingredients', {
@@ -10,33 +22,31 @@ describe('тесты конструктора', () => {
   });
 
   it('должен загрузить ингредиенты и отобразить их', () => {
-    cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').should(
-      'be.visible'
-    );
+    cy.get(selectors.ingredient).should('be.visible');
   });
 
   it('должен открывать и закрывать модальное окно ингредиента', () => {
-    cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
-    cy.get('[data-cy=ingredient-details]').should('be.visible');
-    cy.get('[data-cy=ingredient-details-close]').click();
-    cy.get('[data-cy=ingredient-details]').should('not.exist');
+    cy.get(selectors.ingredient).click();
+    cy.get(selectors.ingredientDetails).should('be.visible');
+    cy.get(selectors.ingredientDetailsClose).click();
+    cy.get(selectors.ingredientDetails).should('not.exist');
 
-    cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
-    cy.get('[data-cy=ingredient-details]').should('be.visible');
+    cy.get(selectors.ingredient).click();
+    cy.get(selectors.ingredientDetails).should('be.visible');
     cy.get('body').type('{esc}');
-    cy.get('[data-cy=ingredient-details]').should('not.exist');
+    cy.get(selectors.ingredientDetails).should('not.exist');
 
-    cy.get('[data-cy=ingredient-643d69a5c3f7b9001cfa093c]').click();
-    cy.get('[data-cy=ingredient-details]').should('be.visible');
-    cy.get('[data-cy=overlay]').click({ force: true });
-    cy.get('[data-cy=ingredient-details]').should('not.exist');
+    cy.get(selectors.ingredient).click();
+    cy.get(selectors.ingredientDetails).should('be.visible');
+    cy.get(selectors.overlay).click({ force: true });
+    cy.get(selectors.ingredientDetails).should('not.exist');
   });
 
   it('должен добавлять булку и начинку', () => {
-    cy.get('[data-cy=add-ingredient-643d69a5c3f7b9001cfa093c]>button').click();
-    cy.get('[data-cy=ingredient-bun-top]').should('be.visible');
-    cy.get('[data-cy=add-ingredient-643d69a5c3f7b9001cfa0941]>button').click();
-    cy.get('[data-cy=ingredient-main-643d69a5c3f7b9001cfa0941]').should(
+    cy.get(selectors.addIngredient('643d69a5c3f7b9001cfa093c')).click();
+    cy.get(selectors.ingredientBunTop).should('be.visible');
+    cy.get(selectors.addIngredient('643d69a5c3f7b9001cfa0941')).click();
+    cy.get(selectors.ingredientMain('643d69a5c3f7b9001cfa0941')).should(
       'be.visible'
     );
   });
@@ -71,17 +81,17 @@ describe('тесты оформления заказа', () => {
   });
 
   it('должен оформить заказ, показать номер заказа, очистить конструктор', () => {
-    cy.get('[data-cy=add-ingredient-643d69a5c3f7b9001cfa093c]>button').click();
-    cy.get('[data-cy=ingredient-bun-top]').should('be.visible');
-    cy.get('[data-cy=add-ingredient-643d69a5c3f7b9001cfa0941]>button').click();
-    cy.get('[data-cy=ingredient-main-643d69a5c3f7b9001cfa0941]').should(
+    cy.get(selectors.addIngredient('643d69a5c3f7b9001cfa093c')).click();
+    cy.get(selectors.ingredientBunTop).should('be.visible');
+    cy.get(selectors.addIngredient('643d69a5c3f7b9001cfa0941')).click();
+    cy.get(selectors.ingredientMain('643d69a5c3f7b9001cfa0941')).should(
       'be.visible'
     );
-    cy.get('[data-cy=order-button]>button').click();
+    cy.get(selectors.orderButton).click();
     cy.wait('@createOrder', { timeout: 1000 })
       .its('response.statusCode')
       .should('eq', 200);
     cy.get('body').type('{esc}');
-    cy.get('[data-cy=ingredient-bun-top]').should('not.exist');
+    cy.get(selectors.ingredientBunTop).should('not.exist');
   });
 });
