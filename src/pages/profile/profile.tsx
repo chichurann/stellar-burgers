@@ -1,41 +1,55 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { getUserApi, updateUserApi } from '@api';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
+  const [userData, setUserData] = useState({
     name: '',
-    email: ''
-  };
+    email: '',
+    password: ''
+  });
+
+  useEffect(() => {
+    getUserApi().then((responce) => {
+      setUserData({ ...responce.user, password: '' });
+    });
+  }, []);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
 
   useEffect(() => {
     setFormValue((prevState) => ({
       ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
+      name: userData.name,
+      email: userData.email
     }));
-  }, [user]);
+  }, [userData]);
 
   const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
+    formValue.name !== userData?.name ||
+    formValue.email !== userData?.email ||
     !!formValue.password;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    updateUserApi({
+      name: formValue.name,
+      email: formValue.email,
+      password: formValue.password
+    }).then((responce) => {
+      setUserData({ ...responce.user, password: '' });
+    });
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: userData.name,
+      email: userData.email,
       password: ''
     });
   };
@@ -56,6 +70,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };
